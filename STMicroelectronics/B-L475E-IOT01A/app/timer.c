@@ -33,6 +33,7 @@ uint64_t tim_get_micros(void) {
     }
 }
 
+#if 0
 cb_t tim_steal_callback(uint32_t *usec) {
     cb_t f;
     f = timer_cb;
@@ -47,6 +48,7 @@ cb_t tim_steal_callback(uint32_t *usec) {
     }
     return f;
 }
+#endif
 
 void tim_set_micros(uint64_t us) {
     timeoff = us;

@@ -33,6 +33,11 @@ extern uint8_t cpu_mhz;
 #define exti_enable(pin) LL_EXTI_EnableIT_0_31(pin)
 #define exti_clear_falling(pin) LL_EXTI_ClearFallingFlag_0_31(pin)
 
+#define EXTI_FALLING 0x01
+#define EXTI_RISING 0x02
+void exti_set_callback(uint8_t pin, cb_t callback, uint32_t flags);
+
+
 void tim_set_micros(uint64_t us);
 cb_t tim_steal_callback(uint32_t *usec);
 void rtc_sync_time(void);

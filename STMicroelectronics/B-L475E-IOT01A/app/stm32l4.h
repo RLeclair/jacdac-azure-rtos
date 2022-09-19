@@ -36,4 +36,7 @@
 #define LL_EXTI_ClearFallingFlag_0_31 LL_EXTI_ClearFlag_0_31
 #define LL_EXTI_IsActiveFallingFlag_0_31 LL_EXTI_IsActiveFlag_0_31
 
+#define TIM17_IRQn TIM1_TRG_COM_TIM17_IRQn
+#define TIM17_IRQHandler TIM1_TRG_COM_TIM17_IRQHandler
+
 #endif
