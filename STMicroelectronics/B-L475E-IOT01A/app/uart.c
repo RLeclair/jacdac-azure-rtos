@@ -16,6 +16,12 @@
 #define IRQHandler USART2_IRQHandler
 #define LL_DMAMUX_REQ_USARTx_RX LL_DMAMUX_REQ_USART2_RX
 #define LL_DMAMUX_REQ_USARTx_TX LL_DMAMUX_REQ_USART2_TX
+#elif USART_IDX == 4
+#define USARTx UART4
+#define IRQn UART4_IRQn
+#define IRQHandler USART4_IRQHandler
+#define LL_DMAMUX_REQ_USARTx_RX 2
+#define LL_DMAMUX_REQ_USARTx_TX 2
 #else
 #error "bad usart"
 #endif
@@ -24,7 +30,11 @@
 #define DMA_IRQn DMA1_Ch4_5_DMAMUX1_OVR_IRQn
 #define DMA_Handler DMA1_Ch4_5_DMAMUX1_OVR_IRQHandler
 #define NEW_UART 1
-#elif (defined(STM32WL) || defined(STM32L4))
+#elif defined(STM32L4)
+#define DMA_IRQn DMA2_Channel3_IRQn
+#define DMA_IRQn_2 DMA2_Channel5_IRQn
+#define NEW_UART 1
+#elif defined(STM32WL)
 #define DMA_IRQn DMA1_Channel4_IRQn
 #define DMA_IRQn_2 DMA1_Channel5_IRQn
 #define NEW_UART 1
@@ -152,6 +162,9 @@ static void USART_UART_Init(void) {
 #elif USART_IDX == 1
     LL_RCC_SetUSARTClockSource(LL_RCC_USART1_CLKSOURCE_HSI);
     __HAL_RCC_USART1_CLK_ENABLE();
+#elif USART_IDX == 4
+    LL_RCC_SetUSARTClockSource(LL_RCC_UART4_CLKSOURCE_HSI);
+    __HAL_RCC_UART4_CLK_ENABLE();
 #else
 #error "bad usart"
 #endif

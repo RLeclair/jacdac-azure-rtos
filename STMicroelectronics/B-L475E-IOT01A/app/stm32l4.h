@@ -3,6 +3,8 @@
 
 // #include "board.h"
 
+#include "stm32l4xx.h"
+
 #include "stm32l4xx_hal_def.h"
 #include "stm32l4xx_hal_rcc.h"
 
@@ -23,6 +25,7 @@
 #include "stm32l4xx_ll_adc.h"
 #include "stm32l4xx_ll_rtc.h"
 #include "stm32l4xx_ll_i2c.h"
+#include "stm32l4xx_ll_dmamux.h"
 
 
 #define HSI_MHZ 16

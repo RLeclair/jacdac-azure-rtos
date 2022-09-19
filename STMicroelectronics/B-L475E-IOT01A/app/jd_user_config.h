@@ -18,7 +18,6 @@
 #define JD_LSTORE 1
 
 #define PIN_LED 5
-#define PIN_JACDAC 3
 
 #define JD_RAW_FRAME 1
 
@@ -36,7 +35,10 @@
 
 #define JD_SIMPLE_ALLOC 0
 
+#define PIN_JACDAC 0
+#define USART_IDX 4
 #define UART_PIN PIN_JACDAC
+#define UART_PIN_AF 8
 
 #define STM32L4
 
