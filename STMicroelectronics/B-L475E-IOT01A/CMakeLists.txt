@@ -30,3 +30,6 @@ set(DISABLE_COMMON_NETWORK true)
 add_subdirectory(${SHARED_SRC_DIR} shared_src)
 add_subdirectory(lib)
 add_subdirectory(app)
+
+set(JACDAC_USER_CONFIG_DIR "../app")
+add_subdirectory(jacdac-c)
