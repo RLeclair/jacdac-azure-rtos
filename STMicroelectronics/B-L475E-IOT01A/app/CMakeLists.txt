@@ -10,6 +10,9 @@ set(SOURCES
     main.c
     nx_client.c
     stm_networking.c
+    flash.c
+    ctrl.c
+    platform.c
 )
 
 add_executable(${PROJECT_NAME}
@@ -25,6 +28,8 @@ target_link_libraries(${PROJECT_NAME}
     netx_driver
     app_common
     jsmn
+
+    jacdac
 )
 
 target_include_directories(${PROJECT_NAME} 

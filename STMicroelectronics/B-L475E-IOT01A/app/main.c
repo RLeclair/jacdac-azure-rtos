@@ -13,6 +13,8 @@
 
 #include "azure_config.h"
 
+#include "azjacdac.h"
+
 #define AZURE_THREAD_STACK_SIZE 4096
 #define AZURE_THREAD_PRIORITY   4
 
@@ -57,10 +59,42 @@ void tx_application_define(void* first_unused_memory)
     }
 }
 
+uint32_t now;
+
+void init_jacscript_manager(void);
+
+void app_init_services(void) {
+#ifdef PIN_PWR_EN
+    if (board_infos[board_type].flags & BOARD_FLAG_PWR_ACTIVE_HI)
+        pwr_cfg.en_active_high = 1;
+    power_init(&pwr_cfg);
+#endif
+#ifndef NO_JACSCRIPT
+    jd_role_manager_init();
+    init_jacscript_manager();
+#endif
+
+#if 0
+    wifi_init();
+    azureiothub_init();
+    jacscloud_init(&azureiothub_cloud);
+#ifndef NO_JACSCRIPT
+    tsagg_init(&azureiothub_cloud);
+#endif
+#endif
+}
+
+
 int main(void)
 {
     // Initialize the board
     board_init();
+
+    DMESG("starting jacscript-esp32 %s", app_fw_version);
+
+    jd_rx_init();
+    jd_tx_init();
+    jd_init();
 
     // Enter the ThreadX kernel
     tx_kernel_enter();
