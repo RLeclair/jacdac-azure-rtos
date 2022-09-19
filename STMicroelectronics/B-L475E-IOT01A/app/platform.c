@@ -34,28 +34,33 @@ void *jd_alloc_emergency_area(uint32_t size) {
 }
 
 void target_reset() {
-    ESP_LOGE("JD", "target_reset()\n");
-    esp_restart_noos_dig();
+    NVIC_SystemReset();
 }
 
-IRAM_ATTR void target_wait_us(uint32_t us) {
+void target_wait_us(uint32_t us) {
     int64_t later = esp_timer_get_time() + us;
     while (esp_timer_get_time() < later) {
         ;
     }
 }
 
-static portMUX_TYPE global_int_mux = portMUX_INITIALIZER_UNLOCKED;
-int int_level;
+static int8_t irq_disabled;
 
-IRAM_ATTR void target_disable_irq() {
-    portENTER_CRITICAL_ISR(&global_int_mux);
-    int_level++;
+void target_enable_irq(void) {
+    irq_disabled--;
+    if (irq_disabled <= 0) {
+        irq_disabled = 0;
+        asm volatile("cpsie i" : : : "memory");
+    }
 }
 
-IRAM_ATTR void target_enable_irq() {
-    int_level--;
-    portEXIT_CRITICAL_ISR(&global_int_mux);
+void target_disable_irq(void) {
+    asm volatile("cpsid i" : : : "memory");
+    irq_disabled++;
+}
+
+int target_in_irq(void) {
+    return (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk) != 0;
 }
 
 void hw_panic(void) {
@@ -64,13 +69,5 @@ void hw_panic(void) {
 }
 
 void reboot_to_uf2(void) {
-    ESP_LOGE("JD", "reset to UF2\n");
-
-#if CONFIG_IDF_TARGET_ESP32S2
-    // call esp_reset_reason() is required for idf.py to properly links esp_reset_reason_set_hint()
-    (void)esp_reset_reason();
-    esp_reset_reason_set_hint((esp_reset_reason_t)0x11F2);
-#endif
-
-    esp_restart_noos_dig();
+    target_reset();
 }
