@@ -7,3 +7,9 @@
 [submodule "shared/lib/jsmn/src"]
 	path = shared/lib/jsmn/src
 	url = https://github.com/zserge/jsmn
+[submodule "STMicroelectronics/B-L475E-IOT01A/jacdac-c"]
+	path = STMicroelectronics/B-L475E-IOT01A/jacdac-c
+	url = https://github.com/microsoft/jacdac-c
+[submodule "STMicroelectronics/B-L475E-IOT01A/jacdac-stm32x0"]
+	path = STMicroelectronics/B-L475E-IOT01A/jacdac-stm32x0
+	url = https://github.com/microsoft/jacdac-stm32x0
