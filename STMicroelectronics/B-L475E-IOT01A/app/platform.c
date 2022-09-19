@@ -1,4 +1,5 @@
 #include "azjacdac.h"
+#include "wifi.h"
 #include <stdlib.h>
 
 int jd_pin_num(void) {
@@ -9,7 +10,7 @@ uint64_t hw_device_id(void) {
     static uint64_t addr;
     if (!addr) {
         uint8_t mac[6];
-        esp_efuse_mac_get_default(mac);
+        WIFI_GetMAC_Address(mac);
         addr = ((uint64_t)0xff << 56) | ((uint64_t)mac[5] << 48) | ((uint64_t)mac[4] << 40) |
                ((uint64_t)mac[3] << 32) | ((uint64_t)mac[2] << 24) | ((uint64_t)mac[1] << 16) |
                ((uint64_t)mac[0] << 8) | ((uint64_t)0xfe << 0);
