@@ -7,7 +7,7 @@ int jd_pin_num(void) {
 }
 
 uint64_t hw_device_id(void) {
-    static uint64_t addr;
+    static uint64_t addr = 0x73f07ebd536d16d0; // TODO!
     if (!addr) {
         uint8_t mac[6];
         WIFI_GetMAC_Address(mac);
@@ -72,3 +72,9 @@ void hw_panic(void) {
 void reboot_to_uf2(void) {
     target_reset();
 }
+
+void rtc_sync_time(void) {}
+
+void rtc_cancel_cb(void) {}
+
+void pwr_enter_no_sleep(void) {}

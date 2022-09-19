@@ -21,6 +21,7 @@
 TX_THREAD azure_thread;
 ULONG azure_thread_stack[AZURE_THREAD_STACK_SIZE / sizeof(ULONG)];
 
+#if 0
 static void azure_thread_entry(ULONG parameter)
 {
     UINT status;
@@ -38,13 +39,47 @@ static void azure_thread_entry(ULONG parameter)
         printf("ERROR: Failed to run Azure IoT (0x%04x)\r\n", status);
     }
 }
+#endif
+
+TX_SEMAPHORE jd_sem;
+static void jd_loop(ULONG parameter)
+{
+    while (1)
+    {
+        tx_semaphore_get(&jd_sem, 1);
+        jd_process_everything();
+
+        if (codalLogStore.ptr) {
+            fwrite(codalLogStore.buffer, codalLogStore.ptr, 1, stdout);
+            codalLogStore.ptr = 0;
+        }
+    }
+}
+
+void jdaz_wake_main(void)
+{
+    tx_semaphore_put(&jd_sem);
+}
 
 void tx_application_define(void* first_unused_memory)
 {
+#if 0
     // Create Azure thread
     UINT status = tx_thread_create(&azure_thread,
         "Azure Thread",
         azure_thread_entry,
+        0,
+        azure_thread_stack,
+        AZURE_THREAD_STACK_SIZE,
+        AZURE_THREAD_PRIORITY,
+        AZURE_THREAD_PRIORITY,
+        TX_NO_TIME_SLICE,
+        TX_AUTO_START);
+#endif
+
+    UINT status = tx_thread_create(&azure_thread,
+        "Jacdac Thread",
+        jd_loop,
         0,
         azure_thread_stack,
         AZURE_THREAD_STACK_SIZE,
@@ -63,7 +98,8 @@ uint32_t now;
 
 void init_jacscript_manager(void);
 
-void app_init_services(void) {
+void app_init_services(void)
+{
 #ifdef PIN_PWR_EN
     if (board_infos[board_type].flags & BOARD_FLAG_PWR_ACTIVE_HI)
         pwr_cfg.en_active_high = 1;
@@ -84,13 +120,23 @@ void app_init_services(void) {
 #endif
 }
 
+uint8_t cpu_mhz;
 
 int main(void)
 {
     // Initialize the board
     board_init();
 
+    printf("starting!\n");
+
     DMESG("starting jacscript-esp32 %s", app_fw_version);
+
+    cpu_mhz = 80;
+
+    tx_semaphore_create(&jd_sem, "jdsem", 1);
+
+    tim_init();
+    uart_init_();
 
     jd_rx_init();
     jd_tx_init();
@@ -101,3 +147,5 @@ int main(void)
 
     return 0;
 }
+
+const char app_fw_version[] = "v0.0.0";

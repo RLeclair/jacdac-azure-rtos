@@ -32,7 +32,7 @@ static void _check_line(int ln) {
         check_line(ln);                                                                            \
     }
 SINGLE(EXTI0_IRQHandler, 0)
-SINGLE(EXTI1_IRQHandler, 1)
+// SINGLE(EXTI1_IRQHandler, 1)
 SINGLE(EXTI2_IRQHandler, 2)
 SINGLE(EXTI3_IRQHandler, 3)
 SINGLE(EXTI4_IRQHandler, 4)

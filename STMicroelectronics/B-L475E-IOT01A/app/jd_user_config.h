@@ -1,7 +1,7 @@
 #ifndef JD_USER_CONFIG_H
 #define JD_USER_CONFIG_H
 
-#define DEVICE_DMESG_BUFFER_SIZE 4096
+#define DEVICE_DMESG_BUFFER_SIZE 1024
 
 #include "dmesg.h"
 
@@ -23,15 +23,15 @@
 
 #define JD_FLASH_PAGE_SIZE 1024
 
-#define JD_USB_BRIDGE 1
+#define JD_USB_BRIDGE 0
 
 // probably not so useful on brains...
 #define JD_CONFIG_WATCHDOG 0
 
 #define JD_SEND_FRAME_SIZE 1024
 
-// void jdesp_wake_main(void);
-// #define JD_WAKE_MAIN() jdesp_wake_main()
+void jdaz_wake_main(void);
+#define JD_WAKE_MAIN() jdaz_wake_main()
 
 #define JD_SIMPLE_ALLOC 0
 

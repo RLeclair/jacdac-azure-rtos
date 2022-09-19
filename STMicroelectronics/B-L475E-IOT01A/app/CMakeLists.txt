@@ -15,6 +15,9 @@ set(SOURCES
     platform.c
     timer.c
     uart.c
+    dmesg.c
+    exti.c
+    pins.c
 )
 
 add_executable(${PROJECT_NAME}

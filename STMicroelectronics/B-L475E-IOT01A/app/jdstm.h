@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "jd_protocol.h"
+#include "services/interfaces/jd_pins.h"
 
 #if defined(STM32F0)
 #include "stm32f0.h"
