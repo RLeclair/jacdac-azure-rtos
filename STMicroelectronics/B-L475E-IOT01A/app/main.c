@@ -49,7 +49,8 @@ static void jd_loop(ULONG parameter)
         tx_semaphore_get(&jd_sem, 1);
         jd_process_everything();
 
-        if (codalLogStore.ptr) {
+        if (codalLogStore.ptr)
+        {
             fwrite(codalLogStore.buffer, codalLogStore.ptr, 1, stdout);
             codalLogStore.ptr = 0;
         }
@@ -126,6 +127,10 @@ int main(void)
 {
     // Initialize the board
     board_init();
+
+    LL_RCC_HSI_Enable();
+    while (!LL_RCC_HSI_IsReady())
+        ;
 
     printf("starting!\n");
 
