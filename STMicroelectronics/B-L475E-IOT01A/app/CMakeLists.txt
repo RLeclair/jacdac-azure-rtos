@@ -13,6 +13,8 @@ set(SOURCES
     flash.c
     ctrl.c
     platform.c
+    timer.c
+    uart.c
 )
 
 add_executable(${PROJECT_NAME}

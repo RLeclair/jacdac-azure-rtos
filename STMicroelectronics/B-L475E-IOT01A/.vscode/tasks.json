@@ -26,12 +26,12 @@
                 "isDefault": true
             },
             // This must be commented out to run on Linux.
-            "options": {
-                "shell": {
-                    "executable": "cmd.exe",
-                    "args": [ "/c" ]
-                }
-            }
+            //"options": {
+              //  "shell": {
+                //    "executable": "cmd.exe",
+                  //  "args": [ "/c" ]
+                //}
+            //}
         }
     ]
 }

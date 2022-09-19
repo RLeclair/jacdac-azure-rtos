@@ -36,4 +36,8 @@
 
 #define JD_SIMPLE_ALLOC 0
 
+#define UART_PIN PIN_JACDAC
+
+#define STM32L4
+
 #endif
