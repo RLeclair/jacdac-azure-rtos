@@ -38,8 +38,8 @@ void target_reset() {
 }
 
 void target_wait_us(uint32_t us) {
-    int64_t later = esp_timer_get_time() + us;
-    while (esp_timer_get_time() < later) {
+    int64_t later = tim_get_micros() + us;
+    while (tim_get_micros() < later) {
         ;
     }
 }
