@@ -118,6 +118,8 @@ static int8_t JDUSB_Init(void)
     USBD_CDC_SetTxBuffer(&USBD_Device, UserTxBuffer, 0);
     USBD_CDC_SetRxBuffer(&USBD_Device, UserRxBuffer);
 
+    USBD_CDC_ReceivePacket(&USBD_Device);
+
     return (0);
 }
 
@@ -222,6 +224,7 @@ static int8_t JDUSB_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t JDUSB_Receive(uint8_t* Buf, uint32_t* Len)
 {
     jd_usb_push(Buf, *Len);
+    USBD_CDC_ReceivePacket(&USBD_Device);
     return (0);
 }
 
