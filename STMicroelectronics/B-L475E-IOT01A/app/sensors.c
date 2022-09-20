@@ -39,7 +39,7 @@ static void* l475_get_humidity(void)
 
 static void* l475_get_barometer(void)
 {
-    baro_r.value = (int32_t) round(BSP_PSENSOR_ReadPressure() * 1024 * 100);
+    baro_r.value = (int32_t) round(BSP_PSENSOR_ReadPressure() * 1024);
     return &baro_r;
 }
 
