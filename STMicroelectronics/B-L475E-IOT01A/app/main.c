@@ -18,10 +18,13 @@
 #define AZURE_THREAD_STACK_SIZE 4096
 #define AZURE_THREAD_PRIORITY   4
 
+#define AZ 0
+
 TX_THREAD azure_thread;
 ULONG azure_thread_stack[AZURE_THREAD_STACK_SIZE / sizeof(ULONG)];
+__attribute__((section(".ram2,\"aw\",%nobits@"))) ULONG jacdac_thread_stack[4096 / 4];
 
-#if 0
+#if AZ
 static void azure_thread_entry(ULONG parameter)
 {
     UINT status;
@@ -64,23 +67,13 @@ void jdaz_wake_main(void)
 
 void tx_application_define(void* first_unused_memory)
 {
-#if 0
+    UINT status = TX_SUCCESS;
+
+#if AZ
     // Create Azure thread
-    UINT status = tx_thread_create(&azure_thread,
+    status = tx_thread_create(&azure_thread,
         "Azure Thread",
         azure_thread_entry,
-        0,
-        azure_thread_stack,
-        AZURE_THREAD_STACK_SIZE,
-        AZURE_THREAD_PRIORITY,
-        AZURE_THREAD_PRIORITY,
-        TX_NO_TIME_SLICE,
-        TX_AUTO_START);
-#endif
-
-    UINT status = tx_thread_create(&azure_thread,
-        "Jacdac Thread",
-        jd_loop,
         0,
         azure_thread_stack,
         AZURE_THREAD_STACK_SIZE,
@@ -92,6 +85,23 @@ void tx_application_define(void* first_unused_memory)
     if (status != TX_SUCCESS)
     {
         printf("ERROR: Azure IoT thread creation failed\r\n");
+    }
+#endif
+
+    status = tx_thread_create(&azure_thread,
+        "Jacdac Thread",
+        jd_loop,
+        0,
+        jacdac_thread_stack,
+        sizeof(jacdac_thread_stack),
+        AZURE_THREAD_PRIORITY,
+        AZURE_THREAD_PRIORITY,
+        TX_NO_TIME_SLICE,
+        TX_AUTO_START);
+
+    if (status != TX_SUCCESS)
+    {
+        printf("ERROR: Jacdac thread creation failed\r\n");
     }
 }
 

@@ -172,6 +172,12 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
+   .ram2 :
+  {
+    *(.ram2)
+    *(.ram2*)
+  } >RAM2
+
   /* Remove information from the standard libraries */
   /DISCARD/ :
   {

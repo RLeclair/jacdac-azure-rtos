@@ -52,7 +52,7 @@ typedef enum TELEMETRY_STATE_ENUM
     TELEMETRY_STATE_END
 } TELEMETRY_STATE;
 
-static AZURE_IOT_NX_CONTEXT azure_iot_nx_client;
+static AZURE_IOT_NX_CONTEXT __attribute__((section(".ram2,\"aw\",%nobits@"))) azure_iot_nx_client;
 
 static int32_t telemetry_interval = 10;
 
