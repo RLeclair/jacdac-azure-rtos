@@ -18,6 +18,7 @@ set(SOURCES
     dmesg.c
     exti.c
     pins.c
+    sensors.c
 
     usbd_ioreq.c
     usbd_conf.c

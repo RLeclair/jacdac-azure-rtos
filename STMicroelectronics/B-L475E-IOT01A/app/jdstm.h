@@ -86,4 +86,6 @@ static inline bool dma_has_flag(int ch, int flag) {
 }
 #endif
 
+void init_sensors(void);
+
 #endif

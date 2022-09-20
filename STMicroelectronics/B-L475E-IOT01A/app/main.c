@@ -110,6 +110,7 @@ void app_init_services(void)
     jd_role_manager_init();
     init_jacscript_manager();
 #endif
+    init_sensors();
 
 #if 0
     wifi_init();
