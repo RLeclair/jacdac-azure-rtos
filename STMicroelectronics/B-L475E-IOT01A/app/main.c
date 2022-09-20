@@ -132,6 +132,8 @@ int main(void)
     while (!LL_RCC_HSI_IsReady())
         ;
 
+  
+
     printf("starting!\n");
 
     DMESG("starting jacscript-esp32 %s", app_fw_version);
@@ -146,6 +148,8 @@ int main(void)
     jd_rx_init();
     jd_tx_init();
     jd_init();
+
+    usb_init();
 
     // Enter the ThreadX kernel
     tx_kernel_enter();

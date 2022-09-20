@@ -26,6 +26,7 @@ set(SOURCES
     usbd_desc.c
     usbd_cdc.c
     usbd_cdc_if.c
+    usb.c
 )
 
 add_executable(${PROJECT_NAME}
