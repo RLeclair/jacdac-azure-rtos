@@ -88,4 +88,6 @@ static inline bool dma_has_flag(int ch, int flag) {
 
 void init_sensors(void);
 
+void usb_init(void);
+
 #endif

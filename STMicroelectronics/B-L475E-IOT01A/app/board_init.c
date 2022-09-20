@@ -106,16 +106,12 @@ uint32_t HAL_GetTick(void)
 }
 
 // EXTI line detection callback
-void USB_HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     switch (GPIO_Pin)
     {
         case GPIO_PIN_1:
             SPI_WIFI_ISR();
-            break;
-        default:
-            USB_HAL_GPIO_EXTI_Callback(GPIO_Pin);
             break;
     }
 }

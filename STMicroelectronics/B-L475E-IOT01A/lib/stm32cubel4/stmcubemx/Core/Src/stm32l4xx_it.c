@@ -185,6 +185,19 @@ void EXTI1_IRQHandler(void)
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
+
+extern PCD_HandleTypeDef hpcd;
+
+/**
+  * @brief  This function handles USB-On-The-Go FS global interrupt request.
+  * @param  None
+  * @retval None
+  */
+void OTG_FS_IRQHandler(void)
+{
+  HAL_PCD_IRQHandler(&hpcd);
+}
+
 /* USER CODE BEGIN 1 */
 
 /* USER CODE END 1 */

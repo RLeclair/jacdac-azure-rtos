@@ -23,7 +23,7 @@
 
 #define JD_FLASH_PAGE_SIZE 1024
 
-#define JD_USB_BRIDGE 0
+#define JD_USB_BRIDGE 1
 
 // probably not so useful on brains...
 #define JD_CONFIG_WATCHDOG 0

@@ -166,6 +166,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd)
   */
 void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd)
 {
+  #if 0
   __HAL_PCD_GATE_PHYCLOCK(hpcd);
   USBD_LL_Suspend(hpcd->pData);
 
@@ -177,6 +178,7 @@ void HAL_PCD_SuspendCallback(PCD_HandleTypeDef *hpcd)
     /* Set SLEEPDEEP bit and SleepOnExit of Cortex System Control Register */
     SCB->SCR |= (uint32_t)((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
   }
+  #endif
 }
 
 /**
@@ -534,10 +536,8 @@ static void SystemClockConfig_STOP(void)
   * @param  GPIO_Pin
   * @retval None
   */
-void USB_HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void USB_HAL_GPIO_EXTI_Callback()
 {
-  if (GPIO_Pin == GPIO_PIN_13)
-  {
     if ((((USBD_HandleTypeDef *)hpcd.pData)->dev_remote_wakeup == 1)&&
         (((USBD_HandleTypeDef *)hpcd.pData)->dev_state == USBD_STATE_SUSPENDED))
     {
@@ -568,7 +568,6 @@ void USB_HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
       ((USBD_HandleTypeDef *)hpcd.pData)->dev_remote_wakeup=0;
       remotewakeupon = 1;
     }
-  }
 }
 
 /**
@@ -581,7 +580,7 @@ void USBD_LL_Delay(uint32_t Delay)
   HAL_Delay(Delay);
 }
 
-#define MEM_SIZE (sizeof(USBD_CDC_HandleTypeDef)/4)+1
+#define MEM_SIZE ((sizeof(USBD_CDC_HandleTypeDef)/4)+1)
 /**
   * @brief  Static single allocation.
   * @param  size: Size of allocated memory
