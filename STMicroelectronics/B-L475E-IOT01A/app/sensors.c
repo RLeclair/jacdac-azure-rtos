@@ -39,10 +39,6 @@ static void* l475_get_accelerometer(void)
     return sample;
 }
 
-static void* l475_get_gyroscope(void)
-{
-
-}
 
 const env_sensor_api_t temperature_l475 = {
     .init = void_sensor_func, 
@@ -55,13 +51,13 @@ const accelerometer_api_t l475_accelerometer = {
     .get_reading = l475_get_accelerometer,
     .sleep       = void_sensor_func
 };
-
+/*
 const gyroscope_api_t l475_gyroscope = {
     .init = void_sensor_func, 
     .get_reading = l475_get_accelerometer, 
     .sleep = void_sensor_func
 };
-
+*/
 void init_sensors(void)
 {
     temperature_init(&temperature_l475);
