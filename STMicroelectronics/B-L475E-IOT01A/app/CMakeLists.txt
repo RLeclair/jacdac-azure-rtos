@@ -18,6 +18,14 @@ set(SOURCES
     dmesg.c
     exti.c
     pins.c
+
+    usbd_ioreq.c
+    usbd_conf.c
+    usbd_core.c
+    usbd_ctlreq.c
+    usbd_desc.c
+    usbd_cdc.c
+    usbd_cdc_if.c
 )
 
 add_executable(${PROJECT_NAME}
