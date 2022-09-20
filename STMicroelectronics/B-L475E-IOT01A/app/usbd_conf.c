@@ -17,8 +17,11 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "jdstm.h"
+#include "usbd_conf.h"
 #include "usbd_cdc.h"
+
+#pragma GCC diagnostic ignored "-Wshadow"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -531,7 +534,7 @@ static void SystemClockConfig_STOP(void)
   * @param  GPIO_Pin
   * @retval None
   */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void USB_HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == GPIO_PIN_13)
   {
@@ -578,6 +581,7 @@ void USBD_LL_Delay(uint32_t Delay)
   HAL_Delay(Delay);
 }
 
+#define MEM_SIZE (sizeof(USBD_CDC_HandleTypeDef)/4)+1
 /**
   * @brief  Static single allocation.
   * @param  size: Size of allocated memory
@@ -585,7 +589,9 @@ void USBD_LL_Delay(uint32_t Delay)
   */
 void *USBD_static_malloc(uint32_t size)
 {
-  static uint32_t mem[(sizeof(USBD_HID_HandleTypeDef)/4)+1];/* On 32-bit boundary */
+  static uint32_t mem[MEM_SIZE];/* On 32-bit boundary */
+  if(size > MEM_SIZE *4)
+    jd_panic();
   return mem;
 }
 
