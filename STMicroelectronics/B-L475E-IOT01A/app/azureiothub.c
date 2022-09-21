@@ -36,6 +36,28 @@ REG_DEFINITION(                                                //
     REG_U32(JD_AZURE_IOT_HUB_HEALTH_REG_PUSH_WATCHDOG_PERIOD), //
 )
 
+
+char *extract_property(const char *property_bag, int plen, const char *key) {
+    int klen = strlen(key);
+    for (int ptr = 0; ptr + klen < plen;) {
+        int nextp = ptr;
+        while (nextp < plen && property_bag[nextp] != ';')
+            nextp++;
+        if (property_bag[ptr + klen] == '=' && memcmp(property_bag + ptr, key, klen) == 0) {
+            int sidx = ptr + klen + 1;
+            int rlen = nextp - sidx;
+            char *r = jd_alloc(rlen + 1);
+            memcpy(r, property_bag + sidx, rlen);
+            r[rlen] = 0;
+            return r;
+        }
+        if (nextp < plen)
+            nextp++;
+        ptr = nextp;
+    }
+    return NULL;
+}
+
 char *double_array_to_json(int numvals, const double *vals) {
     if (numvals == 0)
         return jd_strdup("[]");
@@ -190,6 +212,7 @@ static void azureiothub_reconnect(srv_t *state) {
     jd_free(username);
 }
 
+// TODO check if IoT SDK already has conn-string parsing
 static int set_conn_string(srv_t *state, const char *conn_str, int conn_len, int save) {
     if (conn_len == 0) {
         LOG("clear connection string");
@@ -214,35 +237,8 @@ static int set_conn_string(srv_t *state, const char *conn_str, int conn_len, int
         goto fail;
     }
 
-    hub_name_enc = jd_urlencode(hub_name);
-    device_id_enc = jd_urlencode(device_id);
-
-    const char *parts[] = {hub_name_enc, "%2Fdevices%2F", device_id_enc, "\n", EXPIRES, NULL};
-    char *sas_sig = jd_hmac_b64(sas_key, parts);
-    if (!sas_sig) {
-        LOG("failed computing SAS sig: key=%s", sas_key);
-        goto fail;
-    }
-    char *tmp = sas_sig;
-    sas_sig = jd_urlencode(sas_sig);
-    jd_free(tmp);
-
-    clear_conn_string(state);
-
-    state->hub_name = hub_name;
-    state->device_id = device_id;
-    state->sas_token = jd_sprintf_a("SharedAccessSignature sr=%s%%2Fdevices%%2F%s&se=%s&sig=%s",
-                                    hub_name_enc, device_id_enc, EXPIRES, sas_sig);
-    state->pub_topic = jd_sprintf_a("devices/%s/messages/events/", device_id_enc);
-
-    LOG("conn string: %s -> %s", hub_name, device_id);
-
-    jd_free(sas_key);
-    jd_free(sas_sig);
-    jd_free(hub_name_enc);
-    jd_free(device_id_enc);
-
     if (save) {
+        // store conn string in flash
         nvs_set_blob(state->nvs_handle, "conn_str", conn_str, conn_len);
         nvs_commit(state->nvs_handle);
     }
@@ -403,8 +399,14 @@ int azureiothub_is_connected(void) {
 }
 
 int azureiothub_respond_method(uint32_t method_id, uint32_t status, int numvals, double *vals) {
-    char *topic = jd_sprintf_a("$iothub/methods/res/%d/?$rid=%d", status, method_id);
     char *msg = double_array_to_json(numvals, vals);
+
+    nx_azure_iot_hub_client_command_message_response(
+                 &nx_context_ptr->iothub_client, status,
+                 context_ptr, context_length, 
+                 msg, strlen(msg), NX_WAIT_FOREVER)
+
+    char *topic = jd_sprintf_a("$iothub/methods/res/%d/?$rid=%d", status, method_id);
 
 // TODO
     int r = azureiothub_publish(msg, strlen(msg), topic);
@@ -416,6 +418,7 @@ int azureiothub_respond_method(uint32_t method_id, uint32_t status, int numvals,
 }
 
 
+// for Cloud Adapter (jacscloud.c):
 const jacscloud_api_t azureiothub_cloud = {
     .upload = azureiothub_publish_values,
     .agg_upload = aggbuffer_upload,
